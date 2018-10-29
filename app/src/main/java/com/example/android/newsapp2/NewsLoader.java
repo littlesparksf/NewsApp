@@ -1,0 +1,48 @@
+package com.example.android.newsapp2;
+
+        import android.content.AsyncTaskLoader;
+        import android.content.Context;
+        import android.util.Log;
+
+        import java.util.List;
+
+public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
+
+    /* Tag for log messages */
+    private static final String LOG_TAG = NewsLoader.class.getName();
+
+    /* Query URL */
+    private String mUrl;
+
+    /**
+     * Constructs a new {@link NewsLoader}.
+     *
+     * @param context of the activity
+     * @param url to load data from
+     */
+    public NewsLoader(Context context, String url) {
+        super(context);
+        mUrl = url;
+    }
+
+    @Override
+    protected void onStartLoading() {
+        forceLoad();
+        Log.e(LOG_TAG, "Loader has been started.");
+    }
+
+    /**
+     * This is on a background thread.
+     */
+    @Override
+    public List<NewsItem> loadInBackground() {
+        Log.e(LOG_TAG, "loadInBackground method initiated.");
+        if (mUrl == null) {
+            return null;
+        }
+
+        // Perform the network request, parse the response, and extract a list of earthquakes.
+        List<NewsItem> result = QueryUtils.fetchEarthquakeData(mUrl);
+        return result;
+    }
+}
