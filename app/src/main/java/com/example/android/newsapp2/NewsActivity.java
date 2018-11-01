@@ -62,7 +62,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         newsItemListView.setAdapter(mAdapter);
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
-        // to open a website with more information about the selected earthquake.
+        // to open a website with more information about the selected newws item.
         newsItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -124,11 +124,11 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mEmptyStateTextView.setText("News items have not been loaded - please sit tight!");
 
-        // Clear the adapter of previous earthquake data
+        // Clear the adapter of previous news item data
         mAdapter.clear();
         Log.e(LOG_TAG, "Loading has been finished.");
 
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
+        // If there is a valid list of {@link News Item}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (newsItemList != null && !newsItemList.isEmpty()) {
             mAdapter.addAll(newsItemList);

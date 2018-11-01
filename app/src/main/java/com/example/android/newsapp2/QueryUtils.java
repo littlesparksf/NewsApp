@@ -1,15 +1,10 @@
 package com.example.android.newsapp2;
 
-        import android.app.Activity;
-        import android.os.Bundle;
         import android.text.TextUtils;
         import android.util.Log;
-        import android.widget.TextView;
-
         import org.json.JSONArray;
         import org.json.JSONException;
         import org.json.JSONObject;
-
         import java.io.BufferedReader;
         import java.io.IOException;
         import java.io.InputStream;
@@ -25,7 +20,7 @@ package com.example.android.newsapp2;
 
 
 /**
- * Helper methods related to requesting and receiving earthquake data from USGS.
+ * Helper methods related to requesting and receiving news item data from GuardianAPI.
  */
 public final class QueryUtils {
 
@@ -41,71 +36,74 @@ public final class QueryUtils {
      * Return a list of {@link NewsItem} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<NewsItem> extractFeatureFromJson(String earthquakeJSON) {
+    public static ArrayList<NewsItem> extractFeatureFromJson(String newsItemJSON) {
 
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(earthquakeJSON)) {
+        if (TextUtils.isEmpty(newsItemJSON)) {
             return null;
         }
 
-        // Create an empty ArrayList that we can start adding earthquakes to
-        ArrayList<NewsItem> earthquakes = new ArrayList<>();
+        // Create an empty ArrayList that we can start adding newsItems to
+        ArrayList<NewsItem> newsItems = new ArrayList<>();
 
-        // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
+        // If there's a problem with the way the JSON is formatted,
+        // a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
             // Create a JSONObject from the SAMPLE_JSON_RESPONSE string
-            JSONObject baseJsonResponse = new JSONObject(earthquakeJSON);
+            JSONObject baseJsonResponse = new JSONObject(newsItemJSON);
 
-            // Extract the JSONArray associated with the key called "features"
-            // which represents a list of features (or earthquakes).
-            JSONArray earthquakeArray = baseJsonResponse.getJSONArray("features");
+            // Extract the JSONArray associated with the key called "results"
+            // which represents a list of results (or news items).
+            JSONArray newsItemArray = baseJsonResponse.getJSONArray("results");
 
-            // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
-            for(int i=0; i < earthquakeArray.length(); i++){
+            // For each newsItem in the newsItemArray, create an {@link NewsItem} object
+            for(int i=0; i < newsItemArray.length(); i++){
 
-                // Get a single earthquake at position i within the list of earthquakes
-                JSONObject currentEarthquake = earthquakeArray.getJSONObject(i);
+                // Get a single NewsItem at position i within the list of news items
+                JSONObject currentNewsItem = newsItemArray.getJSONObject(i);
 
-                // For a given earthquake, extract the JSONObject associated with the
-                // key called "properties", which represents a list of all properties
-                // for that earthquake.
-                JSONObject properties = currentEarthquake.getJSONObject("properties");
+                // For a given news item, extract the JSONObject associated with the
+                // key called "results", which represents a list of all properties
+                // for that news item.
+                //JSONObject properties = currentNewsItem.getJSONObject("results");
 
                 // Extract the value for the key called "place"
-                String section = properties.getString("sectionId");
+                String section = currentNewsItem.getString("sectionId");
 
                 // Extract the value for the key called "time"
-                String title = properties.getString("webTitle");
+                String title = currentNewsItem.getString("webTitle");
+
+                // Extract vaulue for the key called "author"
+                String author = currentNewsItem.getString("author");
 
                 // Extract the value for the key called "url"
-                String time = properties.getString("webPublicationDate");
+                String time = currentNewsItem.getString("webPublicationDate");
 
                 // Extract the value for the key called "url"
-                String url = properties.getString("webUrl");
+                String url = currentNewsItem.getString("webUrl");
 
-                // Create a new @link Earthquake object with locatin, time, magnitude and url
-                NewsItem newsItem = new NewsItem(section, title, time, url);
-                earthquakes.add(newsItem);
+                // Create a new @link NewsItem object with section, title, author, time and url
+                NewsItem newsItem = new NewsItem(section, title, author, time, url);
+                newsItems.add(newsItem);
             }
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the NewsItem JSON results", e);
         }
 
-        // Return the list of earthquakes
-        return earthquakes;
+        // Return the list of news items
+        return newsItems;
     }
 
     /**
      * Query the USGS dataset and return a list of {@link NewsItem} objects.
      */
-    public static List<NewsItem> fetchEarthquakeData(String requestUrl) {
+    public static List<NewsItem> fetchNewsItemData(String requestUrl) {
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -117,13 +115,13 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
-        List<NewsItem> earthquakes = extractFeatureFromJson(jsonResponse);
+        // Extract relevant fields from the JSON response and create a list of {@linkNewsItem}s
+        List<NewsItem> newsItems = extractFeatureFromJson(jsonResponse);
 
-        Log.e(LOG_TAG, "List of Earthquake objects has been created.");
+        Log.e(LOG_TAG, "List of NewsItem objects has been created.");
 
-        // Return the list of {@link Earthquake}s
-        return earthquakes;
+        // Return the list of {@link NewsItem}s
+        return newsItems;
     }
 
     /**
@@ -167,7 +165,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the newsItem JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
