@@ -1,5 +1,6 @@
 package com.example.android.newsapp2;
 
+        import android.net.Uri;
         import android.text.TextUtils;
         import android.util.Log;
         import org.json.JSONArray;
@@ -56,7 +57,8 @@ public final class QueryUtils {
 
             // Extract the JSONArray associated with the key called "results"
             // which represents a list of results (or news items).
-            JSONArray newsItemArray = baseJsonResponse.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+            JSONArray newsItemArray = response.getJSONArray("results");
 
             // For each newsItem in the newsItemArray, create an {@link NewsItem} object
             for(int i=0; i < newsItemArray.length(); i++){
@@ -64,24 +66,23 @@ public final class QueryUtils {
                 // Get a single NewsItem at position i within the list of news items
                 JSONObject currentNewsItem = newsItemArray.getJSONObject(i);
 
-                // For a given news item, extract the JSONObject associated with the
-                // key called "results", which represents a list of all properties
-                // for that news item.
-                //JSONObject properties = currentNewsItem.getJSONObject("results");
-
                 // Extract the value for the key called "place"
-                String section = currentNewsItem.getString("sectionId");
+                String section = currentNewsItem.getString("sectionName");
 
                 // Extract the value for the key called "time"
                 String title = currentNewsItem.getString("webTitle");
 
-                // Extract vaulue for the key called "author"
-                String author = currentNewsItem.getString("author");
+                // Extract value for the key called "tag"
+                JSONArray tags = currentNewsItem.getJSONArray("tags");
+                // Get the author's name in the value for the key tag.webTitle
 
-                // Extract the value for the key called "url"
+                JSONObject contributorName = tags.getJSONObject(0);
+                String author = contributorName.getString("webTitle");
+
+                // Extract the value for the key called "webPublicationDate"
                 String time = currentNewsItem.getString("webPublicationDate");
 
-                // Extract the value for the key called "url"
+                // Extract the value for the key called "webUrl"
                 String url = currentNewsItem.getString("webUrl");
 
                 // Create a new @link NewsItem object with section, title, author, time and url

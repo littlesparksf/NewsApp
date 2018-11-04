@@ -31,7 +31,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * The request url that we are using
      */
-    private static final String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com/search?api-key=6c1435b3-a131-42c4-a6f9-0cd4eb5fe70c";
+    private String GUARDIAN_REQUEST_URL;
 
     /**
      * Adapter for list of news articles
@@ -111,8 +111,17 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<NewsItem>> onCreateLoader(int i, Bundle args) {
-        // Create a new loader for the given URL
+        // Create a new loader for the request URL
+        // Use UriBuilder to create the following url:
+        // "https://content.guardianapis.com/search?api-key=6c1435b3-a131-42c4-a6f9-0cd4eb5fe70c&show-tags=contributor"
         Log.e(LOG_TAG, "Loader has been created.");
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("https")
+                    .authority("content.guardianapis.com")
+                    .appendPath("search")
+                    .appendQueryParameter("api-key", "6c1435b3-a131-42c4-a6f9-0cd4eb5fe70c")
+                    .appendQueryParameter("show-tags", "contributor");
+            GUARDIAN_REQUEST_URL = builder.build().toString();
         return new NewsLoader(this, GUARDIAN_REQUEST_URL);
     }
 

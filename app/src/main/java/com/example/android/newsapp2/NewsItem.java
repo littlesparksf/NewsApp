@@ -9,7 +9,7 @@ public class NewsItem {
     private String mTitle;
 
     // Author of story
-    private String mAuthor = "";
+    private String mAuthor;
 
     // Date and time of publication in Guardian format
     private String mDateAndTime;
@@ -25,13 +25,6 @@ public class NewsItem {
      * @param excerpt is an excerpt (first 1-2 sentences) of the news story.
      * @param url is the url of the news story on the Guardian website.
      * */
-
-    public NewsItem(String section, String title, String dateAndTime, String url) {
-        mSectionName = section;
-        mTitle = title;
-        mDateAndTime = dateAndTime;
-        mUrl = url;
-    }
 
     public NewsItem(String section, String title, String author, String dateAndTime, String url) {
         mSectionName = section;

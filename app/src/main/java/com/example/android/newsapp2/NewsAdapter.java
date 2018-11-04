@@ -80,7 +80,7 @@ public class NewsAdapter extends ArrayAdapter<NewsItem> {
             authorTextView.setVisibility(View.GONE);
         }
 
-//        // Create a new Date object from the time in milliseconds of the earthquake
+//        // Create a new Date object from the date format given by Guardian API
 //        Date dateObject = new Date(currentNewsItem.getmDateAndTime());
 //
 //        // Find the TextView with the view id news_item _date
@@ -100,25 +100,24 @@ public class NewsAdapter extends ArrayAdapter<NewsItem> {
 //
 //        // Display the time of the current earthquake in that TextView
 //        timeView.setText(formattedTime);
-
-
-        // Return the list item view that is now showing the appropriate data
+//
+//         Return the list item view that is now showing the appropriate data
         return listItemView;
     }
 
-//    /**
-//     * Helper method - return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
-//     */
-//    private String formatDate(Date dateObject) {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
-//        return dateFormat.format(dateObject);
-//    }
-//
-//    /**
-//     * Helper method - return the formatted date string (i.e. "4:30 PM") from a Date object.
-//     */
-//    private String formatTime(Date dateObject) {
-//        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
-//        return timeFormat.format(dateObject);
-//    }
+    /**
+     * Helper method - return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
+     */
+    private String formatDate(Date dateObject) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
+        return dateFormat.format(dateObject);
+    }
+
+    /**
+     * Helper method - return the formatted date string (i.e. "4:30 PM") from a Date object.
+     */
+    private String formatTime(Date dateObject) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        return timeFormat.format(dateObject);
+    }
 }
